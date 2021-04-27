@@ -59,46 +59,29 @@ public class MainActivity extends AppCompatActivity {
         Temperature = findViewById(R.id.temperature);
         mweatherIcon = findViewById(R.id.weatherIcon);
 
-        mCityFinder = findViewById(R.id.cityFinder);
+        mCityFinder = findViewById(R.id.cityChanger);
         NameofCity = findViewById(R.id.cityName);
 
 
-        mCityFinder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ChangeCity.class);
-                startActivity(intent);
-            }
-        });
 
     }
 
-//    @Override
-//   protected void onResume() {
-//       super.onResume();
-//       getWeatherForCurrentLocation();
-//    }
-
+    //update the information on the weather
     @Override
     protected void onResume() {
         super.onResume();
         Intent mIntent=getIntent();
         String city= mIntent.getStringExtra("City");
-        if(city!=null)
-        {
+        if(city!=null) {
             getWeatherForNewCity(city);
-        }
-        else
-        {
+        } else {
             getWeatherForCurrentLocation();
         }
-
-
     }
 
 
-    private void getWeatherForNewCity(String city)
-    {
+    //get the city
+    private void getWeatherForNewCity(String city) {
         RequestParams params=new RequestParams();
         params.put("q",city);
         params.put("appid",APP_ID);
@@ -107,8 +90,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
+    //get the current location
     private void getWeatherForCurrentLocation() {
 
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -124,10 +106,6 @@ public class MainActivity extends AppCompatActivity {
                 params.put("lon",Longitude);
                 params.put("appid",APP_ID);
                 letsdoSomeNetworking(params);
-
-
-
-
             }
 
             @Override
@@ -146,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-
+        //permission request
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -162,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    //permission request
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -234,5 +212,13 @@ public class MainActivity extends AppCompatActivity {
         {
             mLocationManager.removeUpdates(mLocationListner);
         }
+    }
+
+    public void callDublin(View view) {
+        getWeatherForNewCity("Dublin");
+    }
+
+    public void callParis(View view) {
+        getWeatherForNewCity("Paris");
     }
 }
