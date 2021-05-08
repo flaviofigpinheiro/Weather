@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
         getWeatherForNewCity("Dublin");
     }
 
-    public void callParis(View view) {
+    public void callLyon(View view) {
         getWeatherForNewCity("Paris");
     }
 }
