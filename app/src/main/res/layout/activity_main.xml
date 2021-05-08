@@ -28,7 +28,7 @@
     </TextView>
 
     <ImageView
-        android:id="@+id/weatherIcon"
+        android:id="@+id/wIcon"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_below="@+id/Title"
@@ -42,15 +42,15 @@
         android:id="@+id/weatherinfo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/weatherIcon"
-        android:layout_above="@id/cityChanger"
+        android:layout_below="@+id/wIcon"
+        android:layout_above="@id/cChanger"
 
         android:layout_marginBottom="5dp"
         android:orientation="vertical">
 
 
         <TextView
-            android:id="@+id/temperature"
+            android:id="@+id/temp"
             android:layout_width="283dp"
             android:layout_height="57dp"
             android:paddingStart="30dp"
@@ -62,7 +62,7 @@
         </TextView>
 
         <TextView
-            android:id="@+id/weatherCondition"
+            android:id="@+id/wCondition"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="30sp"
@@ -73,7 +73,7 @@
         </TextView>
 
         <TextView
-            android:id="@+id/cityName"
+            android:id="@+id/cName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="30sp"
@@ -88,7 +88,7 @@
 
 
     <RelativeLayout
-        android:id="@+id/cityChanger"
+        android:id="@+id/cChanger"
         android:layout_width="wrap_content"
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"

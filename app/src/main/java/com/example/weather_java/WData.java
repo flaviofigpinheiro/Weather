@@ -6,7 +6,9 @@ import org.json.JSONObject;
 
 public class WData {
 
-    private String mTemperature,micon,mcity,mWeatherType;
+
+    //getting the weather condition from the web .
+    private String mTemp,micon,mcity, mWType;
     private int mCondition;
 
     public static WData fromJson(JSONObject jsonObject)
@@ -17,11 +19,11 @@ public class WData {
             WData weatherD=new WData();
             weatherD.mcity=jsonObject.getString("name");
             weatherD.mCondition=jsonObject.getJSONArray("weather").getJSONObject(0).getInt("id");
-            weatherD.mWeatherType=jsonObject.getJSONArray("weather").getJSONObject(0).getString("main");
+            weatherD.mWType =jsonObject.getJSONArray("weather").getJSONObject(0).getString("main");
             weatherD.micon=updateWeatherIcon(weatherD.mCondition);
             double tempResult=jsonObject.getJSONObject("main").getDouble("temp")-273.15;
             int roundedValue=(int)Math.rint(tempResult);
-            weatherD.mTemperature=Integer.toString(roundedValue);
+            weatherD.mTemp =Integer.toString(roundedValue);
             return weatherD;
         }
 
@@ -34,11 +36,9 @@ public class WData {
 
     }
 
-
+ // matching the weather condition to the icon, and inserting to a int
     private static String updateWeatherIcon(int condition)
     {
-        // https://openweathermap.org/weather-conditions#Weather-Condition-Codes-2
-
         if(condition>=0 && condition<=300)
         {
             return "thunderstrom1";
@@ -66,7 +66,7 @@ public class WData {
         }
         else if(condition==800)
         {
-            return "sunny2";
+            return "sunny";
         }
         else if(condition>=801 && condition<=804)
         {
@@ -94,8 +94,8 @@ public class WData {
 
     }
 
-    public String getmTemperature() {
-        return mTemperature+"°C";
+    public String getmTemp() {
+        return mTemp+"°C";
     }
 
     public String getMicon() {
@@ -106,7 +106,7 @@ public class WData {
         return mcity;
     }
 
-    public String getmWeatherType() {
-        return mWeatherType;
+    public String getmWType() {
+        return mWType;
     }
 }

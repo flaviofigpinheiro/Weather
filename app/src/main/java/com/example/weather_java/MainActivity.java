@@ -40,14 +40,14 @@ public class MainActivity extends AppCompatActivity {
 
     String Location_Provider = LocationManager.GPS_PROVIDER;
 
-    TextView NameofCity, weatherState, Temperature;
-    ImageView mweatherIcon;
+    TextView NCity, wState, Temp;
+    ImageView mwIcon;
 
-    RelativeLayout mCityFinder;
+    RelativeLayout mCFinder;
 
 
-    LocationManager mLocationManager;
-    LocationListener mLocationListner;
+    LocationManager mLocManager;
+    LocationListener mLocListener;
 
 
     @Override
@@ -55,12 +55,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        weatherState = findViewById(R.id.weatherCondition);
-        Temperature = findViewById(R.id.temperature);
-        mweatherIcon = findViewById(R.id.weatherIcon);
+        wState = findViewById(R.id.wCondition);
+        Temp = findViewById(R.id.temp);
+        mwIcon = findViewById(R.id.wIcon);
 
-        mCityFinder = findViewById(R.id.cityChanger);
-        NameofCity = findViewById(R.id.cityName);
+        mCFinder = findViewById(R.id.cChanger);
+        NCity = findViewById(R.id.cName);
 
 
 
@@ -73,28 +73,28 @@ public class MainActivity extends AppCompatActivity {
         Intent mIntent=getIntent();
         String city= mIntent.getStringExtra("City");
         if(city!=null) {
-            getWeatherForNewCity(city);
+            getWForNewCity(city);
         } else {
-            getWeatherForCurrentLocation();
+            getWForCurrentLoc();
         }
     }
 
 
     //get the city
-    private void getWeatherForNewCity(String city) {
+    private void getWForNewCity(String city) {
         RequestParams params=new RequestParams();
         params.put("q",city);
         params.put("appid",APP_ID);
-        letsdoSomeNetworking(params);
+        connectNetwork(params);
 
     }
 
 
     //get the current location
-    private void getWeatherForCurrentLocation() {
+    private void getWForCurrentLoc() {
 
-        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mLocationListner = new LocationListener() {
+        mLocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mLocListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
 
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 params.put("lat" ,Latitude);
                 params.put("lon",Longitude);
                 params.put("appid",APP_ID);
-                letsdoSomeNetworking(params);
+                connectNetwork(params);
             }
 
             @Override
@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProviderDisabled(String provider) {
                 //not able to get location
+                Toast.makeText(MainActivity.this,"not able to get location",Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -136,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQUEST_CODE);
             return;
         }
-        mLocationManager.requestLocationUpdates(Location_Provider, MIN_TIME, MIN_DISTANCE, mLocationListner);
+        mLocManager.requestLocationUpdates(Location_Provider, MIN_TIME, MIN_DISTANCE, mLocListener);
 
     }
 
@@ -151,20 +152,21 @@ public class MainActivity extends AppCompatActivity {
             if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED)
             {
                 Toast.makeText(MainActivity.this,"Location get Succesffully",Toast.LENGTH_SHORT).show();
-                getWeatherForCurrentLocation();
+                getWForCurrentLoc();
             }
             else
             {
                 //user denied the permission
+                Toast.makeText(MainActivity.this,"User denied the permission",Toast.LENGTH_SHORT).show();
+                getWForCurrentLoc();
+
             }
         }
-
-
     }
 
 
-
-    private  void letsdoSomeNetworking(RequestParams params)
+    //getting the weather data
+    private  void connectNetwork(RequestParams params)
     {
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(WEATHER_URL,params,new JsonHttpResponseHandler()
@@ -175,32 +177,30 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this,"Data Get Success",Toast.LENGTH_SHORT).show();
 
                 WData weatherD= WData.fromJson(response);
-                updateUI(weatherD);
+                updUI(weatherD);
 
-
-                // super.onSuccess(statusCode, headers, response);
             }
 
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                //super.onFailure(statusCode, headers, throwable, errorResponse);
+
             }
         });
 
 
 
     }
+    // getting and inserting the weather condition.
+    private  void updUI(WData weather){
 
-    private  void updateUI(WData weather){
 
+        Temp.setText(weather.getmTemp());
+        NCity.setText(weather.getMcity());
 
-        Temperature.setText(weather.getmTemperature());
-        NameofCity.setText(weather.getMcity());
-
-        weatherState.setText(weather.getmWeatherType());
+        wState.setText(weather.getmWType());
         int resourceID=getResources().getIdentifier(weather.getMicon(),"drawable",getPackageName());
-        mweatherIcon.setImageResource(resourceID);
+        mwIcon.setImageResource(resourceID);
 
 
     }
@@ -208,17 +208,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if(mLocationManager!=null)
+        if(mLocManager !=null)
         {
-            mLocationManager.removeUpdates(mLocationListner);
+            mLocManager.removeUpdates(mLocListener);
         }
     }
-
+    //calling the citys after click the button.
     public void callDublin(View view) {
-        getWeatherForNewCity("Dublin");
+        getWForNewCity("Dublin");
     }
 
     public void callLyon(View view) {
-        getWeatherForNewCity("Paris");
+        getWForNewCity("Lyon");
     }
 }
