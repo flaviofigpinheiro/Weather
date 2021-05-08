@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
     }
     //calling the citys after click the button.
     public void callDublin(View view) {
-        getWForNewCity("Dublin");
+        getWForNewCity("temple bar");
     }
 
     public void callLyon(View view) {
